@@ -1,0 +1,22 @@
+name: Weekly Schedule Update
+on:
+  schedule:
+    - cron: '0 4 * * 1'  # 04:00 UTC = 07:00 по МСК каждый понедельник
+  workflow_dispatch:      # Позволяет запустить вручную кнопкой
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install selenium webdriver-manager requests
+      - name: Run script
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: python update_schedule.py
